@@ -568,6 +568,7 @@ void GCodeQueue::get_serial_commands() {
     while (length < BUFSIZE && !card_eof) {
       const int16_t n = card.get();
       card_eof = card.eof();
+<<<<<<< HEAD
       if (n < 0 && !card_eof) { SERIAL_ERROR_MSG(STR_SD_ERR_READ); continue; }
 
       const char sd_char = (char)n;
@@ -581,6 +582,37 @@ void GCodeQueue::get_serial_commands() {
           #if ENABLED(POWER_LOSS_RECOVERY)
             recovery.cmd_sdpos = card.getIndex();     // Prime for the NEXT _commit_command
           #endif
+=======
+      if (card_eof || n == -1
+          || sd_char == '\n' || sd_char == '\r'
+          || ((sd_char == '#' || sd_char == ':') && !sd_comment_mode
+            #if ENABLED(PAREN_COMMENTS)
+              && !sd_comment_paren_mode
+            #endif
+          )
+      ) {
+        if (card_eof) {
+
+          card.printingHasFinished();
+
+          if (IS_SD_PRINTING())
+            sd_count = 0; // If a sub-file was printing, continue from call point
+          else {
+            SERIAL_ECHOLNPGM(MSG_FILE_PRINTED);
+            #if ENABLED(PRINTER_EVENT_LEDS)
+              printerEventLEDs.onPrintCompleted();
+              #if HAS_RESUME_CONTINUE
+                enqueue_now_P(PSTR("M0 Q S"
+                  #if HAS_LCD_MENU
+                    "1800"
+                  #else
+                    "60"
+                  #endif
+                ));
+              #endif
+            #endif
+          }
+>>>>>>> Fix out-of-order M0 after SD printing
         }
 
         if (card_eof) card.fileHasFinished();         // Handle end of file reached
