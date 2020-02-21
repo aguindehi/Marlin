@@ -568,21 +568,6 @@ void GCodeQueue::get_serial_commands() {
     while (length < BUFSIZE && !card_eof) {
       const int16_t n = card.get();
       card_eof = card.eof();
-<<<<<<< HEAD
-      if (n < 0 && !card_eof) { SERIAL_ERROR_MSG(STR_SD_ERR_READ); continue; }
-
-      const char sd_char = (char)n;
-      const bool is_eol = ISEOL(sd_char);
-      if (is_eol || card_eof) {
-
-        // Reset stream state, terminate the buffer, and commit a non-empty command
-        if (!is_eol && sd_count) ++sd_count;          // End of file with no newline
-        if (!process_line_done(sd_input_state, command_buffer[index_w], sd_count)) {
-          _commit_command(false);
-          #if ENABLED(POWER_LOSS_RECOVERY)
-            recovery.cmd_sdpos = card.getIndex();     // Prime for the NEXT _commit_command
-          #endif
-=======
       if (card_eof || n == -1
           || sd_char == '\n' || sd_char == '\r'
           || ((sd_char == '#' || sd_char == ':') && !sd_comment_mode
@@ -612,7 +597,6 @@ void GCodeQueue::get_serial_commands() {
               #endif
             #endif
           }
->>>>>>> Fix out-of-order M0 after SD printing
         }
 
         if (card_eof) card.fileHasFinished();         // Handle end of file reached
