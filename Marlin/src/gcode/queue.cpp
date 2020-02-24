@@ -568,14 +568,18 @@ void GCodeQueue::get_serial_commands() {
     while (length < BUFSIZE && !card_eof) {
       const int16_t n = card.get();
       card_eof = card.eof();
-      if (card_eof || n == -1
-          || sd_char == '\n' || sd_char == '\r'
-          || ((sd_char == '#' || sd_char == ':') && !sd_comment_mode
-            #if ENABLED(PAREN_COMMENTS)
-              && !sd_comment_paren_mode
-            #endif
-          )
-      ) {
+      if (n < 0 && !card_eof) { SERIAL_ERROR_MSG(MSG_SD_ERR_READ); continue; }
+      const char sd_char = (char)n;
+      if (sd_char == '\n' || sd_char == '\r' || card_eof) {
+
+        // Reset stream state, terminate the buffer, and commit a non-empty command
+        if (!process_line_done(sd_input_state, command_buffer[index_w], sd_count)) {
+          _commit_command(false);                     // Can handle last line missing a newline terminator
+          #if ENABLED(POWER_LOSS_RECOVERY)
+            recovery.cmd_sdpos = card.getIndex();     // Prime for the next _commit_command
+          #endif
+        }
+
         if (card_eof) {
 
           card.printingHasFinished();
