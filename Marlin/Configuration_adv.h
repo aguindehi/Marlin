@@ -2184,7 +2184,11 @@
 
   #if AXIS_IS_TMC(Z)
     //#define Z_CURRENT       800
-    #define Z_CURRENT       600
+    #if SK_Z_BELT_EXP
+      #define Z_CURRENT     800
+    #else
+      #define Z_CURRENT     600
+    #endif
     #define Z_CURRENT_HOME  Z_CURRENT
     #define Z_MICROSTEPS     16
     #define Z_MICROSTEPS     SK_USTEPS
