@@ -59,11 +59,8 @@
   #define SK_Z_ENDSTOP                true
 #endif
 
-// (2019/11/24) 
-// SKR v1.3 doesn't work with Lerdge optical endstop.
-// The signal pin of Z endstop slot won't pull up while 
-// TMC2209 is inserted at Z driver slot.
-// Optical endstop works with TMC2130 and absense of TMC2209 at Z.
+// (2019/12/05) 
+// MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
 
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
@@ -832,7 +829,7 @@
   #define STEPS_X 100
   #define STEPS_Y 100
   #if SK_Z_BELT_EXP
-    #define STEPS_Z 2000
+    #define STEPS_Z 1600
   #else
     #define STEPS_Z 400
   #endif
@@ -1332,7 +1329,7 @@
   #else
   #define INVERT_E0_DIR true
   #endif
-  
+
 #endif
 
 // #define INVERT_E1_DIR false
