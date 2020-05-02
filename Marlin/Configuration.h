@@ -24,9 +24,9 @@
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
 //----------------------------------------------------------
-#define DRIVER_CHIP       TMC2209   // TMC2130, TMC2209, ...
 
-#define USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
+#define SK_DRIVER       TMC2209   // TMC2130, TMC2209, ...
+#define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
 #define SK_MINI_USING_BMG     0
 #define SK_MINI_USING_TITAN   1
@@ -35,9 +35,35 @@
 
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_BMG
+#define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
+
+#define SK_REVERSE_CABLE_SEQUENCE  false
+#define SK_Z_BELT_EXP              false
+
+// Mechanical endstop    : true
+// Lerdge optical endstop: false
+#if (SK_DRIVER==TMC2209) 
+  #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #define SK_Z_ENDSTOP                true
+#elif (SK_DRIVER==TMC2130)
+  #define SK_X_ENDSTOP                true
+  #define SK_Y_ENDSTOP                true
+  #define SK_Z_ENDSTOP                true
+#else
+  #define SK_X_ENDSTOP                false
+  #define SK_Y_ENDSTOP                false
+  #define SK_Z_ENDSTOP                true
+#endif
+
+// (2019/11/24) 
+// SKR v1.3 doesn't work with Lerdge optical endstop.
+// The signal pin of Z endstop slot won't pull up while 
+// TMC2209 is inserted at Z driver slot.
+// Optical endstop works with TMC2130 and absense of TMC2209 at Z.
 
 //----------------------------------------------------------
 // For SK-Go & SK-Mini 
@@ -695,7 +721,7 @@
   //#define ENDSTOPPULLUP_ZMIN_PROBE
 #endif
 
-#if (DRIVER_CHIP == TMC2209)
+#if (SK_DRIVER == TMC2209)
   #define ENDSTOPPULLUP_XMIN
   #define ENDSTOPPULLUP_YMIN
 #else
@@ -718,16 +744,12 @@
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 //#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 //#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#if (DRIVER_CHIP == TMC2209)
-#define X_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
-#elif (DRIVER_CHIP == TMC2130)
-#define X_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#define Y_MIN_ENDSTOP_INVERTING true // Set to true to invert the logic of the endstop.
-#endif
+//#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
+#define X_MIN_ENDSTOP_INVERTING SK_X_ENDSTOP // Set to true to invert the logic of the endstop.
+#define Y_MIN_ENDSTOP_INVERTING SK_Y_ENDSTOP // Set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING SK_Z_ENDSTOP 
 
 // Mechanical endstop needs true, optical needs false
-#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -750,15 +772,15 @@
  * :['A4988', 'A5984', 'DRV8825', 'LV8729', 'L6470', 'L6474', 'POWERSTEP01', 'TB6560', 'TB6600', 'TMC2100', 'TMC2130', 'TMC2130_STANDALONE', 'TMC2160', 'TMC2160_STANDALONE', 'TMC2208', 'TMC2208_STANDALONE', 'TMC2209', 'TMC2209_STANDALONE', 'TMC26X', 'TMC26X_STANDALONE', 'TMC2660', 'TMC2660_STANDALONE', 'TMC5130', 'TMC5130_STANDALONE', 'TMC5160', 'TMC5160_STANDALONE']
  */
 
-#define X_DRIVER_TYPE  DRIVER_CHIP
-#define Y_DRIVER_TYPE  DRIVER_CHIP
-#define Z_DRIVER_TYPE  DRIVER_CHIP
+#define X_DRIVER_TYPE  SK_DRIVER
+#define Y_DRIVER_TYPE  SK_DRIVER
+#define Z_DRIVER_TYPE  SK_DRIVER
 //#define X2_DRIVER_TYPE A4988
 //#define Y2_DRIVER_TYPE A4988
 //#define Z2_DRIVER_TYPE A4988
 //#define Z3_DRIVER_TYPE A4988
 //#define Z4_DRIVER_TYPE A4988
-#define E0_DRIVER_TYPE DRIVER_CHIP
+#define E0_DRIVER_TYPE SK_DRIVER
 //#define E1_DRIVER_TYPE A4988
 //#define E2_DRIVER_TYPE A4988
 //#define E3_DRIVER_TYPE A4988
@@ -812,31 +834,35 @@
  */
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
 
-#if (USTEPS == 8)
+#if (SK_USTEPS == 8)
   #define STEPS_X 50
   #define STEPS_Y 50
   #define STEPS_Z 200
-#elif (USTEPS == 16)
+#elif (SK_USTEPS == 16)
   #define STEPS_X 100
   #define STEPS_Y 100
-  #define STEPS_Z 400
+  #if SK_Z_BELT_EXP
+    #define STEPS_Z 2000
+  #else
+    #define STEPS_Z 400
+  #endif
 #endif
 
 
 #if (SK_MODEL % 2 == 0) // BMG
   // Bontech recommends 413 for BMG extruder @ 1.8 degree stepper, 16 microsteps
   // 413 / 2 * 0.95 = 196.2  (2 is for 8 microsteps, 0.9 to reduce extrusion)
-  #if (USTEPS == 8)
+  #if (SK_USTEPS == 8)
     #define STEPS_E 196.2
-  #elif (USTEPS == 16)
+  #elif (SK_USTEPS == 16)
     #define STEPS_E 392.4
   #endif
 #else // TITAN
   // E3D recommend 418.5 for 16 microsteps
   // 418.5 / 2 * .9 = 188.3
-  #if (USTEPS == 8)
+  #if (SK_USTEPS == 8)
     #define STEPS_E 188.3
-  #elif (USTEPS == 16)
+  #elif (SK_USTEPS == 16)
     #define STEPS_E 376.7
   #endif
 #endif
@@ -1219,25 +1245,46 @@
 //#define INVERT_Y_DIR true
 //#define INVERT_Z_DIR false
 
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-  #define INVERT_X_DIR false
-  #define INVERT_Y_DIR false
-  #define INVERT_Z_DIR true
-#else // SK_GO
+#if SK_REVERSE_CABLE_SEQUENCE
+
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
-  #define INVERT_Z_DIR false
-#endif
+  
+  #if SK_Z_BELT_EXP
+    #define INVERT_Z_DIR true
+  #else
+    #define INVERT_Z_DIR false
+  #endif
 
-// @section extruder
+  #if (SK_MODEL % 2 == 0) // BMG
+    #define INVERT_E0_DIR false
+  #else
+    #define INVERT_E0_DIR true
+  #endif
 
-// For direct drive extruder v9 set to true, for geared extruder set to false.
-//#define INVERT_E0_DIR false
-#if (SK_MODEL % 2 == 0) // BMG
-#define INVERT_E0_DIR false
 #else
-#define INVERT_E0_DIR true
+
+  #define INVERT_X_DIR false
+  #define INVERT_Y_DIR false
+
+  #if SK_Z_BELT_EXP
+    #define INVERT_Z_DIR false
+  #else
+    #define INVERT_Z_DIR true
+  #endif
+
+  // @section extruder
+
+  // For direct drive extruder v9 set to true, for geared extruder set to false.
+  //#define INVERT_E0_DIR false
+  #if (SK_MODEL % 2 == 0) // BMG
+  #define INVERT_E0_DIR false
+  #else
+  #define INVERT_E0_DIR true
+  #endif
+  
 #endif
+
 // #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
