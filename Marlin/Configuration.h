@@ -40,6 +40,7 @@
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_BMG
 #define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
+#define SK_STEPPER             18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
@@ -468,7 +469,7 @@
   #define TEMP_SENSOR_0 5
 #else
   #define TEMP_SENSOR_0 1
-+#endif
+#endif
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -853,10 +854,15 @@
   #define STEPS_Y 50
   #define STEPS_Z 200
 #elif (SK_USTEPS == 16)
-  #define STEPS_X 100
-  #define STEPS_Y 100
+  #if (SK_STEPPER == 9)
+    #define STEPS_X 200
+    #define STEPS_Y 200
+  #else
+    #define STEPS_X 100
+    #define STEPS_Y 100
+  #endif
   #if SK_Z_BELT_EXP
-    #define STEPS_Z 1600
+    #define STEPS_Z 3960
   #else
     #define STEPS_Z 400
   #endif
@@ -1630,16 +1636,16 @@
 
 #if (SK_MODEL <= SK_MINI_USING_TITAN)
   #ifdef BOWDEN_EXTRUSION
-  #define HOMING_FEEDRATE_XY (100*60)
+    #define HOMING_FEEDRATE_XY (100*60)
   #else
-  #define HOMING_FEEDRATE_XY (80*60)
+    #define HOMING_FEEDRATE_XY (80*60)
   #endif
   #define HOMING_FEEDRATE_Z  (25*60)
 #else
   #ifdef BOWDEN_EXTRUSION
-  #define HOMING_FEEDRATE_XY (100*60)
+    #define HOMING_FEEDRATE_XY (100*60)
   #else
-  #define HOMING_FEEDRATE_XY (100*60)
+    #define HOMING_FEEDRATE_XY (100*60)
   #endif
   #define HOMING_FEEDRATE_Z  (30*60)
 #endif
