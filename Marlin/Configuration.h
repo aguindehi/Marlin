@@ -45,8 +45,8 @@
 // Comment it for direct extrusion. Uncomment for bowden setup.
 // #define BOWDEN_EXTRUSION
 
-#define SK_REVERSE_CABLE_SEQUENCE  false
-#define SK_Z_BELT_EXP              false
+#define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
+#define SK_Z_BELT_EXP                 false
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
