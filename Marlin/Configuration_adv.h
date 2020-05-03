@@ -2304,6 +2304,14 @@
    * but you can override or define them here.
    */
   //#define TMC_USE_SW_SPI
+  #if (SK_DRIVER == 2209)
+    // do nothing
+  #elif (SK_DRIVER == 2130)
+    #define TMC_USE_SW_SPI
+ #else
+    // do nothing
+ #endif
+
   //#define TMC_SW_MOSI       -1
   //#define TMC_SW_MISO       -1
   //#define TMC_SW_SCK        -1
@@ -2467,7 +2475,7 @@
     //#define X2_STALL_SENSITIVITY X_STALL_SENSITIVITY
     //#define Y_STALL_SENSITIVITY  8
 
-    #if (SK_DRIVER == TMC2209)
+    #if (SK_DRIVER == 2209)
       #ifdef BOWDEN_EXTRUSION
         #define X_STALL_SENSITIVITY  160
         #define Y_STALL_SENSITIVITY  160
@@ -2475,7 +2483,7 @@
         #define X_STALL_SENSITIVITY  160
         #define Y_STALL_SENSITIVITY  160
       #endif
-    #elif (SK_DRIVER == TMC2130)
+    #elif (SK_DRIVER == 2130)
       #ifdef BOWDEN_EXTRUSION
         #define X_STALL_SENSITIVITY  -1
         #define Y_STALL_SENSITIVITY  -1
@@ -2483,6 +2491,7 @@
         #define X_STALL_SENSITIVITY  0
         #define Y_STALL_SENSITIVITY  0
       #endif
+    #else
     #endif
 
     //#define Z_STALL_SENSITIVITY  8
