@@ -1346,8 +1346,10 @@
 #define SK_X_BED_SIZE  200
 #define SK_Y_BED_SIZE  200
 #else
+//#define SK_X_BED_SIZE  310
+//#define SK_Y_BED_SIZE  330
 #define SK_X_BED_SIZE  310
-#define SK_Y_BED_SIZE  330
+#define SK_Y_BED_SIZE  310
 #endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
