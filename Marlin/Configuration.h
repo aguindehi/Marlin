@@ -21,8 +21,13 @@
  */
 #pragma once
 
+#define SK_MINI_USING_BMG     0
+#define SK_MINI_USING_TITAN   1
+#define SK_GO_USING_BMG       2
+#define SK_GO_USING_TITAN     3
+
 //----------------------------------------------------------
-// For SK-Go & SK-Mini
+// BEGIN: For SK-Go & SK-Mini
 //----------------------------------------------------------
 
 // To use TMC2209 on SKR v1.3, the DIAG pin of TMC2209 at Z slot MUST be removed for endstop to work
@@ -71,7 +76,7 @@
 // MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini
+// END: For SK-Go & SK-Mini
 //----------------------------------------------------------
 
 /**
@@ -536,8 +541,11 @@
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 
 #if ENABLED(PIDTEMP)
-  //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
-  //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+  #define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
+  #define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+  //#define PID_DEBUG             // Sends debug data to the serial port. Use 'M303 D' to toggle activation.
+  //#define PID_OPENLOOP 1        // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
+  //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
   //#define PID_PARAMS_PER_HOTEND // Uses separate PID parameters for each extruder (useful for mismatched extruders)
                                   // Set/get with gcode: M301 E[extruder number, 0-2]
 
@@ -566,7 +574,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -832,6 +840,8 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100, 100, 500, 413 } //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+
 
 #if (SK_USTEPS == 8)
   #define STEPS_X 50
@@ -1140,7 +1150,7 @@
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
 //#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
-#define NOZZLE_TO_PROBE_OFFSET { 33, 15, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { 15, 33, -1.3 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1195,8 +1205,8 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-//#define MULTIPLE_PROBING 2
-//#define EXTRA_PROBING    1
+#define MULTIPLE_PROBING 3
+#define EXTRA_PROBING    1
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1222,8 +1232,8 @@
 // For M851 give a range for adjusting the Z probe offset
 //#define Z_PROBE_OFFSET_RANGE_MIN -20
 //#define Z_PROBE_OFFSET_RANGE_MAX 20
-#define Z_PROBE_OFFSET_RANGE_MIN -40
-#define Z_PROBE_OFFSET_RANGE_MAX 40
+#define Z_PROBE_OFFSET_RANGE_MIN -50
+#define Z_PROBE_OFFSET_RANGE_MAX 50
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -1343,20 +1353,21 @@
 // @section machine
 
 // The size of the print bed
-//#define X_BED_SIZE 200
-//#define Y_BED_SIZE 200
-
-#define X_BED_SIZE  320
-#define Y_BED_SIZE  330
-#define Z_HEIGHT    SK_Z_HEIGHT
+#define X_BED_SIZE  310
+#define Y_BED_SIZE  310
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
+// Ernest: (0, 0) is the corner of bed.
+//         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
+//         and will be shwon in the display after homing.
+//         This can be changed according to your assembly.
 #define X_MIN_POS -5
 #define Y_MIN_POS -20
+
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS Z_HEIGHT
+#define Z_MAX_POS SK_Z_HEIGHT
 
 /**
  * Software Endstops
@@ -1384,7 +1395,7 @@
 #endif
 
 #if EITHER(MIN_SOFTWARE_ENDSTOPS, MAX_SOFTWARE_ENDSTOPS)
-  //#define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
+  #define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
 #endif
 
 /**
@@ -1416,7 +1427,7 @@
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
   //#define FILAMENT_RUNOUT_DISTANCE_MM 25
-  #define FILAMENT_RUNOUT_DISTANCE_MM 500
+  #define FILAMENT_RUNOUT_DISTANCE_MM 5
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
@@ -1592,7 +1603,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-//#define LCD_BED_LEVELING
+#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -1601,7 +1612,7 @@
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
-//#define LEVEL_BED_CORNERS
+#define LEVEL_BED_CORNERS
 
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET_LFRB { 30, 30, 30, 30 } // (mm) Left, Front, Right, Back insets
@@ -1657,9 +1668,9 @@
 
 #define HOMING_FEEDRATE_XY (100*60)
 #if SK_BELTED_Z
-#define HOMING_FEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
+  #define HOMING_FEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else
-#define HOMING_FEEDRATE_Z  (15*60)
+  #define HOMING_FEEDRATE_Z  (15*60)
 #endif
 
 #define HOMING_FEEDRATE_MM_M { HOMING_FEEDRATE_XY, HOMING_FEEDRATE_XY, HOMING_FEEDRATE_Z }

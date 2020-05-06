@@ -2689,8 +2689,8 @@
     //#define Y_STALL_SENSITIVITY  8
 
     #if (SK_DRIVER == 2209)
-      #define X_STALL_SENSITIVITY  160
-      #define Y_STALL_SENSITIVITY  160
+      #define X_STALL_SENSITIVITY  115
+      #define Y_STALL_SENSITIVITY  115
     #elif (SK_DRIVER == 2130)
       #define X_STALL_SENSITIVITY  0
       #define Y_STALL_SENSITIVITY  0
