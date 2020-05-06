@@ -21,8 +21,13 @@
  */
 #pragma once
 
+#define SK_MINI_USING_BMG     0
+#define SK_MINI_USING_TITAN   1
+#define SK_GO_USING_BMG       2
+#define SK_GO_USING_TITAN     3
+
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// BEGIN: For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
 // To use TMC2209 on SKR v1.3, the DIAG pin of TMC2209 at Z slot MUST be removed for endstop to work
@@ -32,21 +37,12 @@
 #define SK_DRIVER          2209   // TMC2130, TMC2209, ...
 #define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
-#define SK_MINI_USING_BMG     0
-#define SK_MINI_USING_TITAN   1
-#define SK_GO_USING_BMG       2
-#define SK_GO_USING_TITAN     3
-
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_BMG
 #define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 #define SK_STEPPER             18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
-// Comment it for direct extrusion. Uncomment for bowden setup.
-// #define BOWDEN_EXTRUSION
-
 #define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
-#define SK_Z_BELT_EXP                 false
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
@@ -64,11 +60,12 @@
   #define SK_Z_ENDSTOP                true
 #endif
 
-// (2019/12/05) 
-// MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
+
+// #define BOWDEN_EXTRUSION                 // Comment it for direct extrusion. Uncomment for bowden setup.
+#define SK_BELTED_Z_EXP               false // set true for settings for belt-z experiment
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// END: For SK-Go & SK-Mini 
 //----------------------------------------------------------
 
 /**
@@ -534,8 +531,8 @@
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
-  //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
-  //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
+  #define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
+  #define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
   //#define PID_DEBUG             // Sends debug data to the serial port. Use 'M303 D' to toggle activation.
   //#define PID_OPENLOOP 1        // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
   //#define SLOW_PWM_HEATERS      // PWM with very low frequency (roughly 0.125Hz=8s) and minimum state time of approximately 1s useful for heaters driven by a relay
@@ -551,9 +548,12 @@
     #define DEFAULT_Ki 1.84
     #define DEFAULT_Kd 48.31
   #else
-    #define DEFAULT_Kp 15.99
-    #define DEFAULT_Ki 1.02
-    #define DEFAULT_Kd 62.42
+    //#define DEFAULT_Kp 15.99
+    //#define DEFAULT_Ki 1.02
+    //#define DEFAULT_Kd 62.42
+    #define DEFAULT_Kp 14.67
+    #define DEFAULT_Ki 0.96
+    #define DEFAULT_Kd 55.87
   #endif
 
   // Ultimaker
@@ -590,7 +590,7 @@
  * heater. If your configuration is significantly different than this and you don't understand
  * the issues involved, don't use bed PID until someone else verifies that your hardware works.
  */
-//#define PIDTEMPBED
+#define PIDTEMPBED
 
 //#define BED_LIMIT_SWITCHING
 
@@ -613,9 +613,12 @@
     #define DEFAULT_bedKd 241.74
   #else
     // SK-Go 110V 400W silicon heater
-    #define DEFAULT_bedKp 50.07
-    #define DEFAULT_bedKi 5.74
-    #define DEFAULT_bedKd 291.36
+    //#define DEFAULT_bedKp 50.07
+    //#define DEFAULT_bedKi 5.74
+    //#define DEFAULT_bedKd 291.36
+    #define DEFAULT_bedKp 56.95
+    #define DEFAULT_bedKi 6.59
+    #define DEFAULT_bedKd 328.16
   #endif
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
@@ -848,6 +851,8 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+//#define DEFAULT_AXIS_STEPS_PER_UNIT   { 100, 100, 500, 413 } //#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 4000, 500 }
+
 
 #if (SK_USTEPS == 8)
   #define STEPS_X 50
@@ -861,7 +866,7 @@
     #define STEPS_X 100
     #define STEPS_Y 100
   #endif
-  #if SK_Z_BELT_EXP
+  #if SK_BELTED_Z_EXP
     #define STEPS_Z 3960
   #else
     #define STEPS_Z 400
@@ -1152,7 +1157,7 @@
  */
 //#define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
 //#define NOZZLE_TO_PROBE_OFFSET { 0, 0, 0 }
-#define NOZZLE_TO_PROBE_OFFSET { 33, 15, 0 }
+#define NOZZLE_TO_PROBE_OFFSET { 15, 33, -1.3 }
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
@@ -1183,8 +1188,8 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-//#define MULTIPLE_PROBING 2
-//#define EXTRA_PROBING    1
+#define MULTIPLE_PROBING 3
+#define EXTRA_PROBING    1
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1210,8 +1215,8 @@
 // For M851 give a range for adjusting the Z probe offset
 //#define Z_PROBE_OFFSET_RANGE_MIN -20
 //#define Z_PROBE_OFFSET_RANGE_MAX 20
-#define Z_PROBE_OFFSET_RANGE_MIN -40
-#define Z_PROBE_OFFSET_RANGE_MAX 40
+#define Z_PROBE_OFFSET_RANGE_MIN -50
+#define Z_PROBE_OFFSET_RANGE_MAX 50
 
 // Enable the M48 repeatability test to test probe accuracy
 #define Z_MIN_PROBE_REPEATABILITY_TEST
@@ -1287,7 +1292,7 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR false
 
-  #if SK_Z_BELT_EXP
+  #if SK_BELTED_Z_EXP
     #define INVERT_Z_DIR false
   #else
     #define INVERT_Z_DIR true
@@ -1338,23 +1343,42 @@
 //#define Y_BED_SIZE 200
 
 #if (SK_MODEL <= SK_MINI_USING_TITAN)
-#define X_BED_SIZE  200
-#define Y_BED_SIZE  200
-#define Z_HEIGHT    200
+#define SK_X_BED_SIZE  200
+#define SK_Y_BED_SIZE  200
 #else
-#define X_BED_SIZE  320
-#define Y_BED_SIZE  330
-#define Z_HEIGHT    300
+#define SK_X_BED_SIZE  310
+#define SK_Y_BED_SIZE  330
 #endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
-#define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
+#if (SK_MODEL <= SK_MINI_USING_TITAN)
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+#else
+  // Ernest: (0, 0) is the corner of bed.
+  //         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
+  //         and will be shwon in the display after homing.
+  //         This can be changed according to your assembly.
+  //#define X_MIN_POS -5
+  //#define Y_MIN_POS -20
+  // Amir: Homing position is (-2, -30)
+  #define X_MIN_POS -2
+  #define Y_MIN_POS -30
+#endif
+
+// Travel limits (mm) after homing, corresponding to endstop positions.
+//#define X_MIN_POS 0
+//#define Y_MIN_POS 0
+//#define Z_MIN_POS 0
+//#define X_MAX_POS X_BED_SIZE
+//#define Y_MAX_POS Y_BED_SIZE
 //#define Z_MAX_POS 200
-#define Z_MAX_POS Z_HEIGHT
+//#define Z_MAX_POS Z_HEIGHT
+
+#define Z_MIN_POS 0
+#define X_MAX_POS SK_X_BED_SIZE
+#define Y_MAX_POS SK_Y_BED_SIZE
+#define Z_MAX_POS SK_Z_HEIGHT
 
 /**
  * Software Endstops
@@ -1382,7 +1406,7 @@
 #endif
 
 #if EITHER(MIN_SOFTWARE_ENDSTOPS, MAX_SOFTWARE_ENDSTOPS)
-  //#define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
+  #define SOFT_ENDSTOPS_MENU_ITEM  // Enable/Disable software endstops from the LCD
 #endif
 
 /**
@@ -1409,11 +1433,12 @@
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
   //#define FILAMENT_RUNOUT_DISTANCE_MM 25
-  #ifdef BOWDEN_EXTRUSION
-    #define FILAMENT_RUNOUT_DISTANCE_MM 50
-  #else
-    #define FILAMENT_RUNOUT_DISTANCE_MM 500
-  #endif
+  //#ifdef BOWDEN_EXTRUSION
+  //  #define FILAMENT_RUNOUT_DISTANCE_MM 50
+  //#else
+  //  #define FILAMENT_RUNOUT_DISTANCE_MM 500
+  //#endif
+  #define FILAMENT_RUNOUT_DISTANCE_MM   5
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
@@ -1579,7 +1604,7 @@
  * Add a bed leveling sub-menu for ABL or MBL.
  * Include a guided procedure if manual probing is enabled.
  */
-//#define LCD_BED_LEVELING
+#define LCD_BED_LEVELING
 
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
@@ -1588,7 +1613,7 @@
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
-//#define LEVEL_BED_CORNERS
+#define LEVEL_BED_CORNERS
 
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET_LFRB { 30, 30, 30, 30 } // (mm) Left, Front, Right, Back insets
@@ -1637,21 +1662,35 @@
 //#define HOMING_FEEDRATE_Z  (4*60)
 //#define HOMING_FEEDRATE_Z  (30*60)
 
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-  #ifdef BOWDEN_EXTRUSION
-    #define HOMING_FEEDRATE_XY (100*60)
-  #else
-    #define HOMING_FEEDRATE_XY (80*60)
-  #endif
-  #define HOMING_FEEDRATE_Z  (25*60)
+//#if (SK_MODEL <= SK_MINI_USING_TITAN)
+//  #ifdef BOWDEN_EXTRUSION
+//    #define HOMING_FEEDRATE_XY (100*60)
+//  #else
+//    #define HOMING_FEEDRATE_XY (80*60)
+//  #endif
+//  #define HOMING_FEEDRATE_Z  (25*60)
+//#else
+//  #ifdef BOWDEN_EXTRUSION
+//    #define HOMING_FEEDRATE_XY (100*60)
+//  #else
+//    #define HOMING_FEEDRATE_XY (100*60)
+//  #endif
+//  #define HOMING_FEEDRATE_Z  (30*60)
+//#endif
+
+// Homing speeds (mm/m)
+#if (SK_DRIVER == 2209)
+#define HOMING_FEEDRATE_XY (30*60)
 #else
-  #ifdef BOWDEN_EXTRUSION
-    #define HOMING_FEEDRATE_XY (100*60)
-  #else
-    #define HOMING_FEEDRATE_XY (100*60)
-  #endif
-  #define HOMING_FEEDRATE_Z  (30*60)
+#define HOMING_FEEDRATE_XY (60*60)
 #endif
+
+#if SK_BELTED_Z_EXP
+#define HOMING_FEEDRATE_Z  (3*60)
+#else
+#define HOMING_FEEDRATE_Z  (15*60)
+#endif
+
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS

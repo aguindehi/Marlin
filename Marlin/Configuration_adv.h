@@ -2402,8 +2402,8 @@
         #define X_STALL_SENSITIVITY  160
         #define Y_STALL_SENSITIVITY  160
       #else
-        #define X_STALL_SENSITIVITY  160
-        #define Y_STALL_SENSITIVITY  160
+        #define X_STALL_SENSITIVITY  115
+        #define Y_STALL_SENSITIVITY  115
       #endif
     #elif (SK_DRIVER == 2130)
       #ifdef BOWDEN_EXTRUSION
