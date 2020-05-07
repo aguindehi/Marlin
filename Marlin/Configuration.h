@@ -1362,7 +1362,7 @@
   //#define Y_MIN_POS -20
   // Amir: Homing position is (-2, -30)
   #define X_MIN_POS -2
-  #define Y_MIN_POS -30
+  #define Y_MIN_POS -23
 #endif
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
