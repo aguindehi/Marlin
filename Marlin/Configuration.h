@@ -1299,14 +1299,10 @@
     #define INVERT_Z_DIR true
   #endif
 
-  // @section extruder
-
-  // For direct drive extruder v9 set to true, for geared extruder set to false.
-  //#define INVERT_E0_DIR false
   #if (SK_MODEL % 2 == 0) // BMG
-  #define INVERT_E0_DIR false
-  #else
   #define INVERT_E0_DIR true
+  #else
+  #define INVERT_E0_DIR false
   #endif
 
 #endif
