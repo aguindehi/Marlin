@@ -1362,8 +1362,8 @@
 //         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
 //         and will be shwon in the display after homing.
 //         This can be changed according to your assembly.
-#define X_MIN_POS -5
-#define Y_MIN_POS -20
+#define X_MIN_POS -2
+#define Y_MIN_POS -23
 
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
