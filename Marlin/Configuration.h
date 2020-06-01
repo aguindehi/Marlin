@@ -1155,7 +1155,8 @@
 
 // Most probes should stay away from the edges of the bed, but
 // with NOZZLE_AS_PROBE this can be negative for a wider probing area.
-#define PROBING_MARGIN 10
+//#define MIN_PROBE_EDGE 10
+#define MIN_PROBE_EDGE 5 // MESH_INSET is 5 as well
 
 // X and Y axis travel speed (mm/m) between probes
 //#define XY_PROBE_SPEED 8000
@@ -1208,7 +1209,7 @@
  * A total of 3 or more adds more slow probes, taking the average.
  */
 #define MULTIPLE_PROBING 2
-#define EXTRA_PROBING    1
+//#define EXTRA_PROBING    1
 
 /**
  * Z probes require clearance when deploying, stowing, and moving between
@@ -1575,10 +1576,10 @@
   #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   //#define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
-  #define MESH_INSET 10              // Set Mesh bounds as an inset region of the bed
+  #define MESH_INSET 5
 
   //#define GRID_MAX_POINTS_X 5      // Don't use more than 15 points per axis, implementation limited.
-  #define GRID_MAX_POINTS_X 8      // Don't use more than 15 points per axis, implementation limited.
+  #define GRID_MAX_POINTS_X 10       // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
