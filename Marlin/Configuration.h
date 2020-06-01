@@ -1365,6 +1365,7 @@
 //         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
 //         and will be shwon in the display after homing.
 //         This can be changed according to your assembly.
+// Amir: Homing position is (-2, -23) - 20200531, Amir
 #define X_MIN_POS -2
 #define Y_MIN_POS -23
 
