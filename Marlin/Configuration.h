@@ -1162,7 +1162,8 @@
 //#define XY_PROBE_SPEED 8000
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 6000
+//#define XY_PROBE_SPEED 6000
+#define XY_PROBE_SPEED 7000
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 //#define Z_PROBE_SPEED_FAST (4*60)
