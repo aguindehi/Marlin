@@ -1654,6 +1654,7 @@
   #define BABYSTEP_MULTIPLICATOR_Z  5       // Babysteps are very small. Increase for faster motion.
   #define BABYSTEP_MULTIPLICATOR_XY 1
 
+  // Enable this after merging the bugfixes for 2.0.5.3 (bug in 2.0.5.3 that re-applies your Z probe offset when baby-stepping is enabled)
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING  // Double-click on the Status Screen for Z Babystepping.
   #if ENABLED(DOUBLECLICK_FOR_Z_BABYSTEPPING)
     #define DOUBLECLICK_MAX_INTERVAL 1250   // Maximum interval between clicks, in milliseconds.
@@ -1988,7 +1989,7 @@
  * Currently handles M108, M112, M410, M876
  * NOTE: Not yet implemented for all platforms.
  */
-//#define EMERGENCY_PARSER
+#define EMERGENCY_PARSER
 
 // Bad Serial-connections can miss a received command by sending an 'ok'
 // Therefore some clients abort after 30 seconds in a timeout.
@@ -2702,7 +2703,7 @@
 
     //#define Z_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130 only
-    #define IMPROVE_HOMING_RELIABILITY
+    #define IMPROVE_HOMING_RELIABILITY  // Enable this but decrease sensitivity a bit - 20200531, Amir
   #endif
 
   /**
