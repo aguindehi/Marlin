@@ -44,11 +44,10 @@
 #define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 #define SK_STEPPER             18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
-// Comment it for direct extrusion. Uncomment for bowden setup.
-// #define BOWDEN_EXTRUSION
+//#define BOWDEN_EXTRUSION                 // Comment it for direct extrusion. Uncomment for bowden setup.
 
 #define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
-#define SK_Z_BELT_EXP                 false
+#define SK_BELTED_Z                   false  // set true for settings for Belt-Z
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
@@ -860,8 +859,8 @@
     #define STEPS_X 100
     #define STEPS_Y 100
   #endif
-  #if SK_Z_BELT_EXP
-    #define STEPS_Z 3960
+  #if SK_BELTED_Z
+    #define STEPS_Z 3200
   #else
     #define STEPS_Z 400
   #endif
@@ -895,10 +894,18 @@
  */
 //#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
 
+
+
 #ifdef BOWDEN_EXTRUSION
-#define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 30, 200 }
+  #define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 30, 200 }
 #else
-#define DEFAULT_MAX_FEEDRATE          { 500, 500, 30, 100 }
+  #if SK_BELTED_Z
+    #define SK_MAX_FEEDRATE_Z   8       // The planar gearbox comes with low speed and high torque
+  #else
+    #define SK_MAX_FEEDRATE_Z   30
+  #endif
+
+  #define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_MAX_FEEDRATE_Z, 100 }
 #endif
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
@@ -1329,7 +1336,7 @@
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
 
-  #if SK_Z_BELT_EXP
+  #if SK_BELTED_Z
     #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR false
@@ -1346,7 +1353,7 @@
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR false
 
-  #if SK_Z_BELT_EXP
+  #if SK_BELTED_Z
     #define INVERT_Z_DIR false
   #else
     #define INVERT_Z_DIR true
@@ -1726,14 +1733,20 @@
   #else
     #define HOMING_FEEDRATE_XY (80*60)
   #endif
-  #define HOMING_FEEDRATE_Z  (25*60)
+  //#define HOMING_FEEDRATE_Z  (25*60)
 #else
   #ifdef BOWDEN_EXTRUSION
     #define HOMING_FEEDRATE_XY (100*60)
   #else
     #define HOMING_FEEDRATE_XY (100*60)
   #endif
-  #define HOMING_FEEDRATE_Z  (30*60)
+  //#define HOMING_FEEDRATE_Z  (30*60)
+#endif
+
+#if SK_BELTED_Z
+#define HOMING_FEEDRATE_Z  (8*60)
+#else
+#define HOMING_FEEDRATE_Z  (15*60)
 #endif
 
 #define HOMING_FEEDRATE_MM_M { HOMING_FEEDRATE_XY, HOMING_FEEDRATE_XY, HOMING_FEEDRATE_Z }
