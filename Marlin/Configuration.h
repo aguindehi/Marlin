@@ -22,20 +22,22 @@
 #pragma once
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// For SK-Go & SK-Mini
 //----------------------------------------------------------
 
 // To use TMC2209 on SKR v1.3, the DIAG pin of TMC2209 at Z slot MUST be removed for endstop to work
 // due to PCB circuit design. Answered by BIGTREETECH.
-// Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130! 
+// Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 
 #define SK_DRIVER          2209   // TMC2130, TMC2209, ...
 #define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
 
-#define SK_MINI_USING_BMG     0
-#define SK_MINI_USING_TITAN   1
-#define SK_GO_USING_BMG       2
-#define SK_GO_USING_TITAN     3
+#define SK_MINI_USING_BMG     0   // Constants for later usage. Don't modify it.
+#define SK_MINI_USING_TITAN   1   // Constants for later usage. Don't modify it.
+#define SK_GO_USING_BMG       2   // Constants for later usage. Don't modify it.
+#define SK_GO_USING_TITAN     3   // Constants for later usage. Don't modify it.
+#define SK_GO2_USING_BMG      2   // Constants for later usage. Don't modify it.
+#define SK_GO2_USING_TITAN    3   // Constants for later usage. Don't modify it.
 
 // Use one of the above defininition to change extruder setup
 #define SK_MODEL              SK_GO_USING_BMG
@@ -50,7 +52,7 @@
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
-#if (SK_DRIVER == 2209) 
+#if (SK_DRIVER == 2209)
   #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
   #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
@@ -64,11 +66,11 @@
   #define SK_Z_ENDSTOP                true
 #endif
 
-// (2019/12/05) 
+// (2019/12/05)
 // MUST remove TMC2209 DIAG pin if inserted at Z slot to let endstop work
 
 //----------------------------------------------------------
-// For SK-Go & SK-Mini 
+// For SK-Go & SK-Mini
 //----------------------------------------------------------
 
 /**
@@ -740,7 +742,7 @@
 //#define Z_MIN_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
 #define X_MIN_ENDSTOP_INVERTING SK_X_ENDSTOP // Set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING SK_Y_ENDSTOP // Set to true to invert the logic of the endstop.
-#define Z_MIN_ENDSTOP_INVERTING SK_Z_ENDSTOP 
+#define Z_MIN_ENDSTOP_INVERTING SK_Z_ENDSTOP
 
 // Mechanical endstop needs true, optical needs false
 #define X_MAX_ENDSTOP_INVERTING false // Set to true to invert the logic of the endstop.
@@ -955,7 +957,7 @@
 //#define CLASSIC_JERK
 
 #ifdef BOWDEN_EXTRUSION
-  #define CLASSIC_JERK 
+  #define CLASSIC_JERK
 #else
 #endif
 
@@ -1326,7 +1328,7 @@
 
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
-  
+
   #if SK_Z_BELT_EXP
     #define INVERT_Z_DIR true
   #else
