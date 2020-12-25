@@ -1167,7 +1167,7 @@
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
 //#define Z_PROBE_SPEED_FAST (4*60)
-#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
+#define Z_PROBE_SPEED_FAST HFEEDRATE_Z
 
 // Feedrate (mm/m) for the "accurate" probe of each point
 //#define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
@@ -1419,8 +1419,8 @@
 #define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
-  #define FIL_RUNOUT_INVERTING false // Set to true to invert the logic of the sensor.
-  //#define FIL_RUNOUT_INVERTING true // Set to true to invert the logic of the sensor.
+  //#define FIL_RUNOUT_INVERTING false // Set to true to invert the logic of the sensor.
+  #define FIL_RUNOUT_STATE LOW       // (LOW == false, HIGH == true)
   #define FIL_RUNOUT_PULLUP          // Use internal pullup for filament runout pins.
   //#define FIL_RUNOUT_PULLDOWN      // Use internal pulldown for filament runout pins.
 
@@ -1671,14 +1671,13 @@
 //#define HOMING_FEEDRATE_Z  (4*60)
 //#define HOMING_FEEDRATE_Z  (30*60)
 
-#define HOMING_FEEDRATE_XY (100*60)
+#define HFEEDRATE_XY (100*60)
 #if SK_BELTED_Z
-  #define HOMING_FEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
+  #define HFEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else
-  #define HOMING_FEEDRATE_Z  (15*60)
+  #define HFEEDRATE_Z  (15*60)
 #endif
-
-#define HOMING_FEEDRATE_MM_M { HOMING_FEEDRATE_XY, HOMING_FEEDRATE_XY, HOMING_FEEDRATE_Z }
+#define HOMING_FEEDRATE_MM_M { HFEEDRATE_XY, HFEEDRATE_XY, HFEEDRATE_Z }
 
 // Validate that endstops are triggered on homing moves
 #define VALIDATE_HOMING_ENDSTOPS
