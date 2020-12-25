@@ -44,20 +44,30 @@
 #define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
 #define SK_STEPPER             18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
 
-//#define BOWDEN_EXTRUSION                 // Comment it for direct extrusion. Uncomment for bowden setup.
-
-#define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
+//#define BOWDEN_EXTRUSION                   // Comment it for direct extrusion. Uncomment for bowden setup.
 #define SK_BELTED_Z                   false  // set true for settings for Belt-Z
+#define SK_USE_S42B                   false
+#define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
 
 // Mechanical endstop    : true
 // Lerdge optical endstop: false
 #if (SK_DRIVER == 2209)
-  #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
-  #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #if SK_USE_S42B
+    #define SK_X_ENDSTOP                false
+    #define SK_Y_ENDSTOP                false
+  #else
+    #define SK_X_ENDSTOP                false // TMC2209 sensorless homing requires false
+    #define SK_Y_ENDSTOP                false // TMC2209 sensorless homing requires false
+  #endif
   #define SK_Z_ENDSTOP                false // false for Lerge optical endstop (HIGH is triggered as desc in spec). True for a mechanical endstop.
 #elif (SK_DRIVER == 2130)
-  #define SK_X_ENDSTOP                true
-  #define SK_Y_ENDSTOP                true
+  #if SK_USE_S42B
+    #define SK_X_ENDSTOP                false
+    #define SK_Y_ENDSTOP                false
+  #else
+    #define SK_X_ENDSTOP                true  // use true for TMC2130 sensorless homing
+    #define SK_Y_ENDSTOP                true  // use true for TMC2130 sensorless homing
+  #endif
   #define SK_Z_ENDSTOP                false
 #else
   #define SK_X_ENDSTOP                false
@@ -769,13 +779,21 @@
  */
 
 #if (SK_DRIVER == 2209)
-  #define X_DRIVER_TYPE  TMC2209
-  #define Y_DRIVER_TYPE  TMC2209
+  #if SK_USE_S42B
+    // no definitions for BigTreeTech S42B needed. S42B comes with its driver on-board.
+  #else
+    #define X_DRIVER_TYPE  TMC2209
+    #define Y_DRIVER_TYPE  TMC2209
+  #endif
   #define Z_DRIVER_TYPE  TMC2209
   #define E0_DRIVER_TYPE TMC2209
 #elif (SK_DRIVER == 2130)
-  #define X_DRIVER_TYPE  TMC2130
-  #define Y_DRIVER_TYPE  TMC2130
+  #if SK_USE_S42B
+    // no definitions for BigTreeTech S42B needed. S42B comes with its driver on-board.
+  #else
+    #define X_DRIVER_TYPE  TMC2130
+    #define Y_DRIVER_TYPE  TMC2130
+  #endif
   #define Z_DRIVER_TYPE  TMC2130
   #define E0_DRIVER_TYPE TMC2130
 +#else
@@ -856,11 +874,16 @@
     #define STEPS_X 200
     #define STEPS_Y 200
   #else
-    #define STEPS_X 100
-    #define STEPS_Y 100
+    #if SK_USE_S42B
+      #define STEPS_X 204.8
+      #define STEPS_Y 204.8
+    #else
+      #define STEPS_X 100
+      #define STEPS_Y 100
+    #endif
   #endif
   #if SK_BELTED_Z
-    #define STEPS_Z 3200
+    #define STEPS_Z 2560
   #else
     #define STEPS_Z 400
   #endif
@@ -900,7 +923,7 @@
   #define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 30, 200 }
 #else
   #if SK_BELTED_Z
-    #define SK_MAX_FEEDRATE_Z   8       // The planar gearbox comes with low speed and high torque
+    #define SK_MAX_FEEDRATE_Z   7.5     // The planar gearbox comes with low speed and high torque
   #else
     #define SK_MAX_FEEDRATE_Z   30
   #endif
@@ -1744,7 +1767,7 @@
 #endif
 
 #if SK_BELTED_Z
-#define HOMING_FEEDRATE_Z  (8*60)
+#define HOMING_FEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else
 #define HOMING_FEEDRATE_Z  (15*60)
 #endif

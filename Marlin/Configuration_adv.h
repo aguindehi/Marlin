@@ -2686,7 +2686,12 @@
    *
    * Comment *_STALL_SENSITIVITY to disable sensorless homing for that axis.
    */
-  #define SENSORLESS_HOMING // StallGuard capable drivers only
+  // servo exp
+  #if SK_USE_S42B
+    // with S42b, physical endstop is a must.
+  #else
+    #define SENSORLESS_HOMING // StallGuard capable drivers only
+  #endif
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
     // TMC2209: 0...255. TMC2130: -64...63
