@@ -46,7 +46,8 @@
 
 //#define BOWDEN_EXTRUSION                   // Comment it for direct extrusion. Uncomment for bowden setup.
 #define SK_BELTED_Z                   false  // set true for settings for Belt-Z
-#define SK_USE_S42B                   false
+#define SK_USE_S42B                   false  // BTT Servo S42B
+#define SK_YX_HOMING_ENDSTOPS         false  // Home to Y Max first, then to X min (YMIN_PLUG -> YMAX_PLUG)
 #define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
 
 // Mechanical endstop    : true
@@ -706,10 +707,14 @@
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
 #define USE_XMIN_PLUG
-#define USE_YMIN_PLUG
+#if !SK_YX_HOMING_ENDSTOPS
+  #define USE_YMIN_PLUG
+#endif
 #define USE_ZMIN_PLUG
 //#define USE_XMAX_PLUG
-//#define USE_YMAX_PLUG
+#if SK_YX_HOMING_ENDSTOPS
+  #define USE_YMAX_PLUG
+#endif
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
@@ -1360,7 +1365,7 @@
   #define INVERT_Y_DIR true
 
   #if SK_BELTED_Z
-    #define INVERT_Z_DIR true
+    #define INVERT_Z_DIR false
   #else
     #define INVERT_Z_DIR false
   #endif
@@ -1377,7 +1382,7 @@
   #define INVERT_Y_DIR false
 
   #if SK_BELTED_Z
-    #define INVERT_Z_DIR false
+    #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR true
   #endif
@@ -1417,7 +1422,11 @@
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
 #define X_HOME_DIR -1
-#define Y_HOME_DIR -1
+#if SK_YX_HOMING_ENDSTOPS
+  #define Y_HOME_DIR 1
+#else
+  #define Y_HOME_DIR -1
+#endif
 #define Z_HOME_DIR -1
 
 // @section machine

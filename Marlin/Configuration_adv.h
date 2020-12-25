@@ -665,9 +665,13 @@
 //#define HOMING_BACKOFF_POST_MM { 2, 2, 2 }  // (mm) Backoff from endstops after homing
 
 //#define QUICK_HOME                          // If G28 contains XY do a diagonal move first
-//#define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
+#if SK_YX_HOMING_ENDSTOPS
+  #define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
+#endif
 //#define HOME_Z_FIRST                        // Home Z first. Requires a Z-MIN endstop (not a probe).
-//#define CODEPENDENT_XY_HOMING               // If X/Y can't home without homing Y/X first
+#if SK_YX_HOMING_ENDSTOPS
+  #define CODEPENDENT_XY_HOMING
+#endif
 
 // @section bltouch
 
@@ -2690,7 +2694,15 @@
   #if SK_USE_S42B
     // with S42b, physical endstop is a must.
   #else
-    #define SENSORLESS_HOMING // StallGuard capable drivers only
+   #if SK_YX_HOMING_ENDSTOPS
+      // Disable TMC sensorless homing and use optical endstops.
+    #else
+      #if SK_YX_HOMING_ENDSTOPS
+        // Disable TMC sensorless homing and use optical endstops.
+      #else
+        #define SENSORLESS_HOMING // StallGuard capable drivers only
+      #endif
+    #endif
   #endif
 
   #if EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
