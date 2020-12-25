@@ -851,7 +851,7 @@
     #endif
   #endif
   #if SK_BELTED_Z
-    #define STEPS_Z 2560
+    #define STEPS_Z 3200
   #else
     #define STEPS_Z 400
   #endif
