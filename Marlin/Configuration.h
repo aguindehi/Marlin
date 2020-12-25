@@ -30,21 +30,12 @@
 // Remove the object and binary output direcotry (/.pio) before rebuild if you switch between 2209 and 2130!
 
 #define SK_DRIVER          2209   // TMC2130, TMC2209, ...
-#define SK_USTEPS            16   // microsteps used in firmware. TMC2130 will interpolate to 256.
-
-#define SK_MINI_USING_BMG     0   // Constants for later usage. Don't modify it.
-#define SK_MINI_USING_TITAN   1   // Constants for later usage. Don't modify it.
-#define SK_GO_USING_BMG       2   // Constants for later usage. Don't modify it.
-#define SK_GO_USING_TITAN     3   // Constants for later usage. Don't modify it.
-#define SK_GO2_USING_BMG      2   // Constants for later usage. Don't modify it.
-#define SK_GO2_USING_TITAN    3   // Constants for later usage. Don't modify it.
 
 // Use one of the above defininition to change extruder setup
-#define SK_MODEL              SK_GO_USING_BMG
-#define SK_Z_HEIGHT           350     // SK-Mini: 250 or 300. SK-Go: 300 or 350.
-#define SK_STEPPER             18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
+#define SK_Z_HEIGHT        350    // SK-Go: 300 or 350.
+#define SK_STEPPER         18     // 18 for 1.8 degree, 9 for 0.9 degree stepper
+#define SK_USTEPS          16     // microsteps used in firmware. TMC2130 will interpolate to 256.
 
-//#define BOWDEN_EXTRUSION                   // Comment it for direct extrusion. Uncomment for bowden setup.
 #define SK_BELTED_Z                   false  // set true for settings for Belt-Z
 #define SK_USE_S42B                   false  // BTT Servo S42B
 #define SK_YX_HOMING_ENDSTOPS         false  // Home to Y Max first, then to X min (YMIN_PLUG -> YMAX_PLUG)
@@ -195,13 +186,7 @@
 #endif
 
 // Name displayed in the LCD "Ready" message and Info menu
-//#define CUSTOM_MACHINE_NAME "3D Printer"
-
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-  #define CUSTOM_MACHINE_NAME "SK-Mini"
-#else
-  #define CUSTOM_MACHINE_NAME "SK-Go"
-#endif
+#define CUSTOM_MACHINE_NAME "SK-Go"
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
@@ -479,11 +464,7 @@
  */
 
 //#define TEMP_SENSOR_0 1
-#if (SK_MODEL % 2 == 0) // BMG
-  #define TEMP_SENSOR_0 5
-#else
-  #define TEMP_SENSOR_0 1
-#endif
+#define TEMP_SENSOR_0 5 // 5 for BMG
 #define TEMP_SENSOR_1 0
 #define TEMP_SENSOR_2 0
 #define TEMP_SENSOR_3 0
@@ -562,15 +543,9 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
 
-  #if (SK_MODEL <= SK_MINI_USING_TITAN)
-    #define DEFAULT_Kp 18.85
-    #define DEFAULT_Ki 1.84
-    #define DEFAULT_Kd 48.31
-  #else
-    #define DEFAULT_Kp 15.99
-    #define DEFAULT_Ki 1.02
-    #define DEFAULT_Kd 62.42
-  #endif
+  #define DEFAULT_Kp 15.99
+  #define DEFAULT_Ki 1.02
+  #define DEFAULT_Kd 62.42
 
 #endif // PIDTEMP
 
@@ -607,17 +582,10 @@
   //#define MIN_BED_POWER 0
   //#define PID_BED_DEBUG // Sends debug data to the serial port.
 
-  #if (SK_MODEL <= SK_MINI_USING_TITAN)
-    // SK-Mini 24V MK3 200x200x3 aluminum bed with magnetic PEI surface
-    #define DEFAULT_bedKp 105.92
-    #define DEFAULT_bedKi 11.60
-    #define DEFAULT_bedKd 241.74
-  #else
-    // SK-Go 110V 400W silicon heater
-    #define DEFAULT_bedKp 50.07
-    #define DEFAULT_bedKi 5.74
-    #define DEFAULT_bedKd 291.36
-  #endif
+  // SK-Go 110V 400W silicon heater
+  #define DEFAULT_bedKp 50.07
+  #define DEFAULT_bedKi 5.74
+  #define DEFAULT_bedKd 291.36
 
   //120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   //from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
@@ -653,12 +621,7 @@
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-//#define EXTRUDE_MAXLENGTH 200
-#ifdef BOWDEN_EXTRUSION
-#define EXTRUDE_MAXLENGTH 700
-#else
 #define EXTRUDE_MAXLENGTH 200
-#endif
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -894,23 +857,12 @@
   #endif
 #endif
 
-
-#if (SK_MODEL % 2 == 0) // BMG
-  // Bontech recommends 413 for BMG extruder @ 1.8 degree stepper, 16 microsteps
-  // 413 / 2 * 0.95 = 196.2  (2 is for 8 microsteps, 0.9 to reduce extrusion)
-  #if (SK_USTEPS == 8)
-    #define STEPS_E 196.2
-  #elif (SK_USTEPS == 16)
-    #define STEPS_E 392.4
-  #endif
-#else // TITAN
-  // E3D recommend 418.5 for 16 microsteps
-  // 418.5 / 2 * .9 = 188.3
-  #if (SK_USTEPS == 8)
-    #define STEPS_E 188.3
-  #elif (SK_USTEPS == 16)
-    #define STEPS_E 376.7
-  #endif
+// Bontech recommends 413 for BMG extruder @ 1.8 degree stepper, 16 microsteps
+// 413 / 2 * 0.95 = 196.2  (2 is for 8 microsteps, 0.9 to reduce extrusion)
+#if (SK_USTEPS == 8)
+  #define STEPS_E 196.2
+#elif (SK_USTEPS == 16)
+  #define STEPS_E 392.4
 #endif
 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { STEPS_X, STEPS_Y, STEPS_Z, STEPS_E }
@@ -920,21 +872,15 @@
  * Override with M203
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-//#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
-
-
-
-#ifdef BOWDEN_EXTRUSION
-  #define DEFAULT_MAX_FEEDRATE          { 1000, 1000, 30, 200 }
+#if SK_BELTED_Z
+  #define SK_MAX_FEEDRATE_Z   7.5     // The planar gearbox comes with low speed and high torque
 #else
-  #if SK_BELTED_Z
-    #define SK_MAX_FEEDRATE_Z   7.5     // The planar gearbox comes with low speed and high torque
-  #else
-    #define SK_MAX_FEEDRATE_Z   30
-  #endif
-
-  #define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_MAX_FEEDRATE_Z, 100 }
+  #define SK_MAX_FEEDRATE_Z   30
 #endif
+
+//#define DEFAULT_MAX_FEEDRATE          { 300, 300, 5, 25 }
+#define DEFAULT_MAX_FEEDRATE          { 500, 500, SK_MAX_FEEDRATE_Z, 100 }
+
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -948,11 +894,7 @@
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
 //#define DEFAULT_MAX_ACCELERATION      { 3000, 3000, 100, 10000 }
-#ifdef BOWDEN_EXTRUSION
-#define DEFAULT_MAX_ACCELERATION      { 2000, 2000, 200, 2000 }
-#else
 #define DEFAULT_MAX_ACCELERATION      { 1500, 1500, 200, 1500 }
-#endif
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -971,15 +913,10 @@
 //#define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
 //#define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
 
-#ifdef BOWDEN_EXTRUSION
-#define DEFAULT_ACCELERATION          2000    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   2000    // X, Y, Z acceleration for travel (non printing) moves
-#else
 #define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves
-#define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves
-#endif
+#define DEFAULT_RETRACT_ACCELERATION  1500    // E acceleration for retracts
+#define DEFAULT_TRAVEL_ACCELERATION   1500    // X, Y, Z acceleration for travel (non printing) moves
+
 
 /**
  * Default Jerk limits (mm/s)
@@ -990,24 +927,12 @@
  * value set here, it may happen instantaneously.
  */
 //#define CLASSIC_JERK
-
-#ifdef BOWDEN_EXTRUSION
-  #define CLASSIC_JERK
-#else
-#endif
-
 #if ENABLED(CLASSIC_JERK)
   //#define DEFAULT_XJERK 10.0
   //#define DEFAULT_YJERK 10.0
 
-    #ifdef BOWDEN_EXTRUSION
-    #define DEFAULT_XJERK 10.0
-    #define DEFAULT_YJERK 10.0
-  #else
-    #define DEFAULT_XJERK 5.0
-    #define DEFAULT_YJERK 5.0
-  #endif
-
+  #define DEFAULT_XJERK  5.0
+  #define DEFAULT_YJERK  5.0
   #define DEFAULT_ZJERK  0.3
 
   //#define TRAVEL_EXTRA_XYJERK 0.0     // Additional jerk allowance for all travel moves
@@ -1224,14 +1149,11 @@
 //#define XY_PROBE_SPEED 8000
 
 // X and Y axis travel speed (mm/m) between probes
-#ifdef BOWDEN_EXTRUSION
-#define XY_PROBE_SPEED 9000
-#else
 #define XY_PROBE_SPEED 6000
-#endif
 
 // Feedrate (mm/min) for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_SPEED_FAST (4*60)
+//#define Z_PROBE_SPEED_FAST (4*60)
+#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
 
 // Feedrate (mm/min) for the "accurate" probe of each point
 #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
@@ -1363,38 +1285,24 @@
 
   #define INVERT_X_DIR true
   #define INVERT_Y_DIR true
+  #define INVERT_E0_DIR false
 
   #if SK_BELTED_Z
-    #define INVERT_Z_DIR false
+    #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR false
-  #endif
-
-  #if (SK_MODEL % 2 == 0) // BMG
-    #define INVERT_E0_DIR false
-  #else
-    #define INVERT_E0_DIR true
   #endif
 
 #else
 
   #define INVERT_X_DIR false
   #define INVERT_Y_DIR false
+  #define INVERT_E0_DIR true
 
   #if SK_BELTED_Z
     #define INVERT_Z_DIR true
   #else
     #define INVERT_Z_DIR true
-  #endif
-
-  // @section extruder
-
-  // For direct drive extruder v9 set to true, for geared extruder set to false.
-  //#define INVERT_E0_DIR false
-  #if (SK_MODEL % 2 == 0) // BMG
-  #define INVERT_E0_DIR false
-  #else
-  #define INVERT_E0_DIR true
   #endif
 
 #endif
@@ -1435,23 +1343,16 @@
 //#define X_BED_SIZE 200
 //#define Y_BED_SIZE 200
 
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-#define X_BED_SIZE  200
-#define Y_BED_SIZE  200
-#define Z_HEIGHT    200
-#else
 #define X_BED_SIZE  320
 #define Y_BED_SIZE  330
-#define Z_HEIGHT    300
-#endif
+#define Z_HEIGHT    SK_Z_HEIGHT
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define X_MIN_POS -5
+#define Y_MIN_POS -20
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-//#define Z_MAX_POS 200
 #define Z_MAX_POS Z_HEIGHT
 
 /**
@@ -1512,11 +1413,7 @@
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
   //#define FILAMENT_RUNOUT_DISTANCE_MM 25
-  #ifdef BOWDEN_EXTRUSION
-    #define FILAMENT_RUNOUT_DISTANCE_MM 50
-  #else
-    #define FILAMENT_RUNOUT_DISTANCE_MM 500
-  #endif
+  #define FILAMENT_RUNOUT_DISTANCE_MM 500
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
@@ -1662,11 +1559,7 @@
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   //#define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
-  #if (SK_MODEL <= SK_MINI_USING_TITAN)
-    #define MESH_INSET 10              // Set Mesh bounds as an inset region of the bed
-  #else
-    #define MESH_INSET 30              // Set Mesh bounds as an inset region of the bed
-  #endif
+  #define MESH_INSET 30              // Set Mesh bounds as an inset region of the bed
 
   //#define GRID_MAX_POINTS_X 10      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_X 5      // Don't use more than 15 points per axis, implementation limited.
@@ -1759,22 +1652,7 @@
 //#define HOMING_FEEDRATE_Z  (4*60)
 //#define HOMING_FEEDRATE_Z  (30*60)
 
-#if (SK_MODEL <= SK_MINI_USING_TITAN)
-  #ifdef BOWDEN_EXTRUSION
-    #define HOMING_FEEDRATE_XY (100*60)
-  #else
-    #define HOMING_FEEDRATE_XY (80*60)
-  #endif
-  //#define HOMING_FEEDRATE_Z  (25*60)
-#else
-  #ifdef BOWDEN_EXTRUSION
-    #define HOMING_FEEDRATE_XY (100*60)
-  #else
-    #define HOMING_FEEDRATE_XY (100*60)
-  #endif
-  //#define HOMING_FEEDRATE_Z  (30*60)
-#endif
-
+#define HOMING_FEEDRATE_XY (100*60)
 #if SK_BELTED_Z
 #define HOMING_FEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else

@@ -2145,11 +2145,7 @@
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
                                                   //   Set to 0 for manual unloading.
-  #ifdef BOWDEN_EXTRUSION
-    #define FILAMENT_CHANGE_UNLOAD_LENGTH      695
-  #else
-    #define FILAMENT_CHANGE_UNLOAD_LENGTH      100
-  #endif
+  #define FILAMENT_CHANGE_UNLOAD_LENGTH      100
 
   #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   10 // (mm/s) Slow move when starting load.
   // #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   4  // for SK-Swift. (mm/s) Slow move when starting load.
@@ -2161,11 +2157,7 @@
   // #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     0  // (mm) Load length of filament, from extruder gear to nozzle.
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
-  #ifdef BOWDEN_EXTRUSION
-    #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     695
-  #else
-    #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     50  // (mm) Load length of filament, from extruder gear to nozzle.
-  #endif
+  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     50  // (mm) Load length of filament, from extruder gear to nozzle.
 
   //#define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        3  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
@@ -2332,13 +2324,8 @@
   #define INTERPOLATE      true
 
   #if AXIS_IS_TMC(X)
-    //#define X_CURRENT       800        // (mA) RMS current. Multiply by 1.414 for peak current.
-    #ifdef BOWDEN_EXTRUSION
-      #define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #else
-      //#define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-      #define X_CURRENT     400  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #endif
+    //#define X_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #define X_CURRENT     400  // (mA) RMS current. Multiply by 1.414 for peak current.
     //#define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
     #define X_CURRENT_HOME  X_CURRENT  // (mA) RMS current for sensorless homing
     //#define X_MICROSTEPS     16    // 0..256
@@ -2358,13 +2345,8 @@
   #endif
 
   #if AXIS_IS_TMC(Y)
-    //#define Y_CURRENT       800
-    #ifdef BOWDEN_EXTRUSION
-      #define Y_CURRENT     800  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #else
-      //#define Y_CURRENT     800
-      #define Y_CURRENT     400
-    #endif
+    //#define Y_CURRENT     800
+    #define Y_CURRENT     400
     #define Y_CURRENT_HOME  Y_CURRENT
     //#define Y_MICROSTEPS     16
     #define Y_MICROSTEPS     SK_USTEPS
@@ -2638,13 +2620,8 @@
    */
   //#define HYBRID_THRESHOLD
 
-  #ifdef BOWDEN_EXTRUSION
-    #define X_HYBRID_THRESHOLD     120  // [mm/s]
-    #define Y_HYBRID_THRESHOLD     120
-  #else
-    #define X_HYBRID_THRESHOLD     120  // [mm/s]
-    #define Y_HYBRID_THRESHOLD     120
-  #endif
+  #define X_HYBRID_THRESHOLD     120  // [mm/s]
+  #define Y_HYBRID_THRESHOLD     120
 
   //#define X_HYBRID_THRESHOLD     100  // [mm/s]
   //#define X_HYBRID_THRESHOLD     70  // [mm/s]
@@ -2712,21 +2689,11 @@
     //#define Y_STALL_SENSITIVITY  8
 
     #if (SK_DRIVER == 2209)
-      #ifdef BOWDEN_EXTRUSION
-        #define X_STALL_SENSITIVITY  160
-        #define Y_STALL_SENSITIVITY  160
-      #else
-        #define X_STALL_SENSITIVITY  160
-        #define Y_STALL_SENSITIVITY  160
-      #endif
+      #define X_STALL_SENSITIVITY  160
+      #define Y_STALL_SENSITIVITY  160
     #elif (SK_DRIVER == 2130)
-      #ifdef BOWDEN_EXTRUSION
-        #define X_STALL_SENSITIVITY  -1
-        #define Y_STALL_SENSITIVITY  -1
-      #else
-        #define X_STALL_SENSITIVITY  0
-        #define Y_STALL_SENSITIVITY  0
-      #endif
+      #define X_STALL_SENSITIVITY  0
+      #define Y_STALL_SENSITIVITY  0
     #else
     #endif
 
