@@ -1159,9 +1159,6 @@
 #define PROBING_MARGIN 5 // MESH_INSET is 5 as well
 
 // X and Y axis travel speed (mm/m) between probes
-//#define XY_PROBE_SPEED 8000
-
-// X and Y axis travel speed (mm/m) between probes
 //#define XY_PROBE_SPEED 6000
 #define XY_PROBE_SPEED 7000
 
@@ -1366,8 +1363,9 @@
 //         and will be shwon in the display after homing.
 //         This can be changed according to your assembly.
 // Amir: Homing position is (-2, -23) - 20200531, Amir
+// Amir: Homing position is (-2, -22) - 20201226, Amir
 #define X_MIN_POS -2
-#define Y_MIN_POS -23
+#define Y_MIN_POS -22
 
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
@@ -1578,7 +1576,8 @@
   #define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   //#define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
-  #define MESH_INSET 5
+  //#define MESH_INSET 5
+  #define MESH_INSET 10
 
   //#define GRID_MAX_POINTS_X 5      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_X 10       // Don't use more than 15 points per axis, implementation limited.
