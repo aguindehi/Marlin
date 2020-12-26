@@ -1672,7 +1672,7 @@
 //#define HOMING_FEEDRATE_Z  (30*60)
 
 //#define HFEEDRATE_XY (100*60) // This is too fast for sensorless homing
-#define HFEEDRATE_XY (20*60)
+#define HFEEDRATE_XY (90*60)
 #if SK_BELTED_Z
   #define HFEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else

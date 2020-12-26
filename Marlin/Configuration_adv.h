@@ -2703,7 +2703,8 @@
 
     //#define Z_STALL_SENSITIVITY  8
     //#define SPI_ENDSTOPS              // TMC2130 only
-    #define IMPROVE_HOMING_RELIABILITY  // Enable this but decrease sensitivity a bit - 20200531, Amir
+    //#define IMPROVE_HOMING_RELIABILITY  // Enable this but decrease sensitivity a bit - 20200531, Amir
+                                          // This decreases sensitivity so much, to get carrage moving, that the crash at the end is too strong! (165 -> 80)
   #endif
 
   /**
