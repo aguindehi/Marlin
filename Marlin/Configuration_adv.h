@@ -2624,8 +2624,8 @@
    */
   //#define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     120  // [mm/s]
-  #define Y_HYBRID_THRESHOLD     120
+  #define X_HYBRID_THRESHOLD     122  // [mm/s]
+  #define Y_HYBRID_THRESHOLD     122
 
   //#define X_HYBRID_THRESHOLD     100  // [mm/s]
   //#define X_HYBRID_THRESHOLD     70  // [mm/s]
