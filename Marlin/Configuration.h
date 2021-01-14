@@ -1580,7 +1580,9 @@
   #define MESH_INSET 10
 
   //#define GRID_MAX_POINTS_X 5      // Don't use more than 15 points per axis, implementation limited.
-  #define GRID_MAX_POINTS_X 10       // Don't use more than 15 points per axis, implementation limited.
+  //#define GRID_MAX_POINTS_X 10     // Don't use more than 15 points per axis, implementation limited.
+  //#define GRID_MAX_POINTS_X 9      // Don't use more than 15 points per axis, implementation limited.
+  #define GRID_MAX_POINTS_X 8        // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
