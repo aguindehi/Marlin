@@ -1416,6 +1416,9 @@
  */
 #define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
+  // Change filament runout sensor pins
+  #define FIL_RUNOUT_PIN P1_29 // now: P1_29 (X-), was: P1_28 (X+)
+
   #define NUM_RUNOUT_SENSORS   1     // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
   //#define FIL_RUNOUT_INVERTING false // Set to true to invert the logic of the sensor.
   #define FIL_RUNOUT_STATE LOW       // (LOW == false, HIGH == true)
@@ -1430,7 +1433,9 @@
   // before executing the runout script. Useful for a sensor at the end of
   // a feed tube. Requires 4 bytes SRAM per sensor, plus 4 bytes overhead.
   //#define FILAMENT_RUNOUT_DISTANCE_MM 25
-  #define FILAMENT_RUNOUT_DISTANCE_MM   10
+  //#define FILAMENT_RUNOUT_DISTANCE_MM   10
+  // Adjusted for length of SK-Go1 tube length (+45cm)
+  #define FILAMENT_RUNOUT_DISTANCE_MM   460
 
   #ifdef FILAMENT_RUNOUT_DISTANCE_MM
     // Enable this option to use an encoder disc that toggles the runout pin
