@@ -678,18 +678,17 @@
 // Specify here all the endstop connectors that are connected to any endstop or probe.
 // Almost all printers will be using one per axis. Probes will use one or more of the
 // extra connectors. Leave undefined any used for non-endstop and non-probe purposes.
-#define USE_XMIN_PLUG
 #if !SK_YX_HOMING_ENDSTOPS
+  #define USE_XMIN_PLUG
   #define USE_YMIN_PLUG
 #endif
-#define USE_ZMIN_PLUG
-//#define USE_XMAX_PLUG
 #if SK_YX_HOMING_ENDSTOPS
-  // optical endstop at ymax
-  #define USE_YMAX_PLUG
   // added for optical endstop at xmax, 25.02.2021, Amir
   #define USE_XMAX_PLUG
+  // optical endstop at ymax
+  #define USE_YMAX_PLUG
 #endif
+#define USE_ZMIN_PLUG
 //#define USE_ZMAX_PLUG
 
 // Enable pullup for all endstops to prevent a floating state
