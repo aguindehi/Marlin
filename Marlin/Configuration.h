@@ -43,7 +43,7 @@
 
 #define SK_BELTED_Z                   false  // set true for settings for Belt-Z
 #define SK_USE_S42B                   false  // BTT Servo S42B
-#define SK_YX_HOMING_ENDSTOPS         false  // Home to Y Max first, then to X min (YMIN_PLUG -> YMAX_PLUG)
+#define SK_YX_HOMING_ENDSTOPS         true   // Home to Y Max first, then to X max (no YMIN_PLUG but XMAX_PLUG, YMAX_PLUG)
 #define SK_REVERSE_CABLE_SEQUENCE     false  // if steppers turn reversely, either set this definition or change cable sequence
 
 // Mechanical endstop    : true
@@ -685,7 +685,10 @@
 #define USE_ZMIN_PLUG
 //#define USE_XMAX_PLUG
 #if SK_YX_HOMING_ENDSTOPS
+  // optical endstop at ymax
   #define USE_YMAX_PLUG
+  // added for optical endstop at xmax, 25.02.2021, Amir
+  #define USE_XMAX_PLUG
 #endif
 //#define USE_ZMAX_PLUG
 
@@ -1343,11 +1346,14 @@
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR -1
+//#define X_HOME_DIR -1
 #if SK_YX_HOMING_ENDSTOPS
   #define Y_HOME_DIR 1
+  // added for homing to xmax, 25.02.2021, Amir
+  #define X_HOME_DIR 1
 #else
   #define Y_HOME_DIR -1
+  #define X_HOME_DIR -1
 #endif
 #define Z_HOME_DIR -1
 
@@ -1362,14 +1368,25 @@
 //         (X_MIN_POS, X_MIN_POS), for example (-5, -20), is the homing position
 //         and will be shwon in the display after homing.
 //         This can be changed according to your assembly.
-// Amir: Homing position is (-2, -23) - 20200531, Amir
-// Amir: Homing position is (-3, -22) - 20201226, Amir
-#define X_MIN_POS -3
-#define Y_MIN_POS -22
+
+#if SK_YX_HOMING_ENDSTOPS
+  // We home towards xmax/ymax, set xmin/ymin to (0, 0)
+  #define X_MIN_POS 0
+  #define Y_MIN_POS 0
+  // Homing position at xmax/ymax is (319, 310) - 20210226, Amir
+  #define X_MAX_POS 319
+  #define Y_MAX_POS 310
+#else /* SK_YX_HOMING_ENDSTOPS */
+  // Homing position at xmin/ymin is (-2, -23) - 20200531, Amir
+  // Homing position is xmin/ymin (-3, -22) - 20201226, Amir
+  #define X_MIN_POS -3
+  #define Y_MIN_POS -22
+  // We home towards xmin/ymin, set xmax/ymax to (X_BED_SIZE, Y_BED_SIZE)
+  #define X_MAX_POS X_BED_SIZE
+  #define Y_MAX_POS Y_BED_SIZE
+#endif
 
 #define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
 #define Z_MAX_POS SK_Z_HEIGHT
 
 /**

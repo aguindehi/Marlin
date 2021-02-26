@@ -2670,7 +2670,7 @@
    * IMPROVE_HOMING_RELIABILITY tunes acceleration and jerk when
    * homing and adds a guard period for endstop triggering.
    *
-   * Comment *_STALL_SENSITIVITY to disable sensorless homing for that axis.
+   * Comment *_STALL_SENSITIVITY to disable sensorless homing for thatg st axis.
    */
   // servo exp
   #if SK_USE_S42B
@@ -2679,11 +2679,7 @@
    #if SK_YX_HOMING_ENDSTOPS
       // Disable TMC sensorless homing and use optical endstops.
     #else
-      #if SK_YX_HOMING_ENDSTOPS
-        // Disable TMC sensorless homing and use optical endstops.
-      #else
-        #define SENSORLESS_HOMING // StallGuard capable drivers only
-      #endif
+      #define SENSORLESS_HOMING // StallGuard capable drivers only
     #endif
   #endif
 
