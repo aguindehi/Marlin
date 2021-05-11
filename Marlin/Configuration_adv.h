@@ -404,7 +404,7 @@
   #define CONTROLLERFAN_SPEED_ACTIVE 255 // (0-255) Active speed, used when any motor is enabled
   #define CONTROLLERFAN_SPEED_IDLE     0 // (0-255) Idle speed, used when motors are disabled
   #define CONTROLLERFAN_IDLE_TIME     60 // (seconds) Extra time to keep the fan running after disabling motors
-  //#define CONTROLLER_FAN_EDITABLE      // Enable M710 configurable settings
+  #define CONTROLLER_FAN_EDITABLE        // Enable M710 configurable settings
   #if ENABLED(CONTROLLER_FAN_EDITABLE)
     #define CONTROLLER_FAN_MENU          // Enable the Controller Fan submenu
   #endif
@@ -655,22 +655,22 @@
  * the position of the toolhead relative to the workspace.
  */
 #if SK_YX_HOMING_ENDSTOPS
-  //#define HOMING_BUMP_MM       { 2, 2, 2 }  // (mm) Backoff from endstops after first bump
-  #define HOMING_BUMP_MM         { 5, 5, 2 }  // (mm) Backoff from endstops after first bump
-  #define HOMING_BUMP_DIVISOR    { 4, 4, 4 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
-  #define HOMING_BACKOFF_POST_MM { 0, 0, 2 }  // (mm) Backoff from endstops after homing
+  //#define HOMING_BUMP_MM       { 2, 2, 2 }   // (mm) Backoff from endstops after first bump
+  #define HOMING_BUMP_MM         { 5, 5, 2 }   // (mm) Backoff from endstops after first bump
+  #define HOMING_BUMP_DIVISOR    { 16, 16, 4 } // Re-Bump Speed Divisor (Divides the Homing Feedrate)
+  #define HOMING_BACKOFF_POST_MM { 0, 0, 2 }   // (mm) Backoff from endstops after homing
 
-  #define HOME_Y_BEFORE_X                     // If G28 contains XY home Y before X
-  #define CODEPENDENT_XY_HOMING               // Make sure Marlin is aware that homing X depends on homing Y first
+  #define HOME_Y_BEFORE_X                      // If G28 contains XY home Y before X
+  #define CODEPENDENT_XY_HOMING                // Make sure Marlin is aware that homing X depends on homing Y first
 #else /* SK_YX_HOMING_ENDSTOPS */
-  #define SENSORLESS_BACKOFF_MM  { 2, 2 }     // (mm) Backoff from endstops before sensorless homing
-  #define HOMING_BUMP_MM         { 0, 0, 0 }  // (mm) Backoff from endstops after first bump (Ernest switches this off as recommended in the src file)
-  #define HOMING_BUMP_DIVISOR    { 2, 2, 4 }  // Re-Bump Speed Divisor (Divides the Homing Feedrate)
-  #define HOMING_BACKOFF_POST_MM { 2, 5, 2 }  // (mm) Backoff from endstops after homing
+  #define SENSORLESS_BACKOFF_MM  { 2, 2 }      // (mm) Backoff from endstops before sensorless homing
+  #define HOMING_BUMP_MM         { 0, 0, 0 }   // (mm) Backoff from endstops after first bump (Ernest switches this off as recommended in the src file)
+  #define HOMING_BUMP_DIVISOR    { 2, 2, 4 }   // Re-Bump Speed Divisor (Divides the Homing Feedrate)
+  #define HOMING_BACKOFF_POST_MM { 2, 5, 2 }   // (mm) Backoff from endstops after homing
 #endif /* SK_YX_HOMING_ENDSTOPS */
 
-//#define QUICK_HOME                          // If G28 contains XY do a diagonal move first
-//#define HOME_Z_FIRST                        // Home Z first. Requires a Z-MIN endstop (not a probe).
+//#define QUICK_HOME                           // If G28 contains XY do a diagonal move first
+//#define HOME_Z_FIRST                         // Home Z first. Requires a Z-MIN endstop (not a probe).
 
 // @section bltouch
 

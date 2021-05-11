@@ -169,6 +169,7 @@
  * :[-2, -1, 0, 1, 2, 3, 4, 5, 6, 7]
  */
 //#define SERIAL_PORT_2 -1
+#define SERIAL_PORT_2 0
 
 /**
  * This setting determines the communication speed of the printer.
@@ -1693,8 +1694,14 @@
 //#define HOMING_FEEDRATE_Z  (4*60)
 //#define HOMING_FEEDRATE_Z  (30*60)
 
+#if SK_YX_HOMING_ENDSTOPS
+//#define HFEEDRATE_XY (180*60)
+  #define HFEEDRATE_XY (150*60)
+#else /* SK_YX_HOMING_ENDSTOPS */
 //#define HFEEDRATE_XY (100*60) // This is too fast for sensorless homing
-#define HFEEDRATE_XY (90*60)
+  #define HFEEDRATE_XY (90*60)
+#endif /* SK_YX_HOMING_ENDSTOPS */
+
 #if SK_BELTED_Z
   #define HFEEDRATE_Z  (450)   // 7.5mm/s * 60s/min
 #else
