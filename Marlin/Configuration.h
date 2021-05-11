@@ -1361,7 +1361,9 @@
 
 // The size of the print bed
 #define X_BED_SIZE  310
-#define Y_BED_SIZE  310
+// Max Y size is limited to 306 because of 9-point bed location
+//#define Y_BED_SIZE  310
+#define Y_BED_SIZE  306
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 // Ernest: (0, 0) is the corner of bed.
@@ -1374,8 +1376,9 @@
   #define X_MIN_POS 0
   #define Y_MIN_POS 0
   // Homing position at xmax/ymax is (319, 310) - 20210226, Amir
-  #define X_MAX_POS 319
-  #define Y_MAX_POS 310
+  // Homing position at xmax/ymax is (315, 306) with new 9-point bed - 20210511, Amir
+  #define X_MAX_POS 315
+  #define Y_MAX_POS 306
 #else /* SK_YX_HOMING_ENDSTOPS */
   // Homing position at xmin/ymin is (-2, -23) - 20200531, Amir
   // Homing position is xmin/ymin (-3, -22) - 20201226, Amir
