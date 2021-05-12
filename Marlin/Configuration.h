@@ -1699,7 +1699,8 @@
 
 #if SK_YX_HOMING_ENDSTOPS
 //#define HFEEDRATE_XY (180*60)
-  #define HFEEDRATE_XY (150*60)
+//#define HFEEDRATE_XY (150*60)
+  #define HFEEDRATE_XY (120*60)
 #else /* SK_YX_HOMING_ENDSTOPS */
 //#define HFEEDRATE_XY (100*60) // This is too fast for sensorless homing
   #define HFEEDRATE_XY (90*60)
